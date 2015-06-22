@@ -20,6 +20,7 @@
 #include "overviewpage.h"
 #include "receiptpage.h"
 #include "sendmessagesdialog.h"
+#include "sendcoinsbydelegatedialog.h"
 #include "messagepage.h"
 #include "invoiceviewpage.h"
 #include "invoicepage.h"
@@ -52,6 +53,7 @@ WalletView::WalletView(QWidget *parent):
 	exchangeBrowser = new ExchangeBrowser(this);
 	blockBrowser = new BlockBrowser(this);
 	bankstatisticsPage = new BankStatisticsPage(this);
+	
 	banknodeManagerPage = new BanknodeManager(this);
     transactionsPage = new QWidget(this);
     QVBoxLayout *vbox = new QVBoxLayout();
@@ -70,7 +72,7 @@ WalletView::WalletView(QWidget *parent):
 
     receiveCoinsPage = new ReceiveCoinsDialog();
     sendCoinsPage = new SendCoinsDialog();
-
+	sendCoinsByDelegatePage = new SendCoinsByDelegateDialog();
 	
 	sendMessagesPage     = new SendMessagesDialog(SendMessagesDialog::Encrypted, SendMessagesDialog::Page);
     	
@@ -85,7 +87,7 @@ WalletView::WalletView(QWidget *parent):
     addWidget(sendCoinsPage);
     addWidget(blockBrowser);
     addWidget(bankstatisticsPage);
-
+	addWidget(sendCoinsByDelegatePage);
 	addWidget(chatWindow);
 	addWidget(exchangeBrowser);
 	addWidget(sendMessagesPage);
@@ -151,7 +153,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
     overviewPage->setWalletModel(walletModel);
     receiveCoinsPage->setModel(walletModel);
     sendCoinsPage->setModel(walletModel);
-
+	sendCoinsByDelegatePage->setModel(walletModel);
 
 
     if (walletModel)
@@ -276,6 +278,14 @@ void WalletView::gotoInvoicesPage()
 void WalletView::gotoReceiptPage()
 {
     setCurrentWidget(receiptPage);
+}
+
+void WalletView::gotoSendCoinsByDelegatePage(QString addr)
+{
+    setCurrentWidget(sendCoinsByDelegatePage);
+    
+        if (!addr.isEmpty())
+        sendCoinsByDelegatePage->setAddress(addr);
 }
 
 void WalletView::gotoBankStatisticsPage()

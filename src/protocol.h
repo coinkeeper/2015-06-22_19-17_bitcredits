@@ -99,6 +99,8 @@ public:
             (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
             READWRITE(nTime);
         READWRITE(nServices);
+        if ((nType & SER_DISK) ||(nVersion >= CADDR_ADVERTISED_BALANCE_VERSION && !(nType & SER_GETHASH)))
+            READWRITE(advertised_balance);
         READWRITE(*(CService*)this);
     }
 
@@ -111,6 +113,8 @@ public:
 
     // memory only
     int64_t nLastTry;
+
+    int64_t advertised_balance;
 };
 
 /** inv message data */

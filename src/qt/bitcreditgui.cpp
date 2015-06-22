@@ -432,6 +432,10 @@ void BitcreditGUI::createActions(const NetworkStyle *networkStyle)
     toolbarsend2->addAction(sendCoinsAction);
     tabGroup->addAction(sendCoinsAction);
 
+    sendCoinsByDelegateAction = new QAction(QIcon(":/icons/null"), tr("&Escrow"),this);
+    sendCoinsByDelegateAction->setCheckable(true);
+    tabGroup->addAction(sendCoinsByDelegateAction);
+
     receiveCoinsAction = new QAction(QIcon(":/icons/null"), tr("&Receive"), this);
     receiveCoinsAction->setCheckable(true);
     toolbarsend->addAction(receiveCoinsAction);
@@ -502,7 +506,10 @@ void BitcreditGUI::createActions(const NetworkStyle *networkStyle)
     connect(actionSendReceiveinv, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(actionSendReceiveinv, SIGNAL(triggered()), this, SLOT(gotoInvoicesPage()));
     connect(actionSendReceivestats, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
-    connect(actionSendReceivestats, SIGNAL(triggered()), this, SLOT(gotoExchangeBrowserPage()));    
+    connect(actionSendReceivestats, SIGNAL(triggered()), this, SLOT(gotoExchangeBrowserPage()));   
+    
+    connect(sendCoinsByDelegateAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(sendCoinsByDelegateAction, SIGNAL(triggered()), this, SLOT(gotoSendCoinsByDelegatePage()));  
 
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
@@ -621,7 +628,8 @@ void BitcreditGUI::createToolBars()
 	toolbar->addAction(actionSendReceivestats);		        		
 	toolbar->addAction(chatAction);
 	toolbar->addAction(banknodeManagerAction);
-
+	toolbar->addAction(sendCoinsByDelegateAction);
+		
         historyAction->setChecked(true);
     }
     
@@ -934,6 +942,20 @@ void BitcreditGUI::gotoBankStatisticsPage()
     wId3->hide();
     wId4->show();
     wId4->raise();    
+}
+
+void BitcreditGUI::gotoSendCoinsByDelegatePage(QString addr)
+{
+    sendCoinsByDelegateAction->setChecked(true);
+    actionSendReceive->setChecked(false);
+    actionSendReceiveMess->setChecked(false);
+    actionSendReceiveinv->setChecked(false);
+    if (walletFrame) walletFrame->gotoSendCoinsByDelegatePage();
+    
+    wId2->hide();
+    wId->hide();
+    wId3->hide();
+    wId4->hide();
 }
 
 void BitcreditGUI::gotoOverviewPage()

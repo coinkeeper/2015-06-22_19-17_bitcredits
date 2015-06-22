@@ -114,6 +114,7 @@ public:
         AmountWithFeeExceedsBalance,
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
+        DelegateNotFound,
         TransactionCommitFailed,
 	AnonymizeOnlyUnlocked,
         InsaneFee
@@ -159,6 +160,9 @@ public:
 
     // Send coins to a list of recipients
     SendCoinsReturn sendCoins(WalletModelTransaction &transaction);
+
+    // Send coins by delegate
+    SendCoinsReturn sendCoinsByDelegate(const QList<SendCoinsRecipient> &recipients, const CCoinControl *coinControl=NULL);
 
     // Wallet encryption
     bool setWalletEncrypted(bool encrypted, const SecureString &passphrase);

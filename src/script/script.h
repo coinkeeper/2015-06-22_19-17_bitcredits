@@ -14,6 +14,7 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include "pubkey.h"
 
 static const unsigned int MAX_SCRIPT_ELEMENT_SIZE = 520; // bytes
 
@@ -159,8 +160,14 @@ enum opcodetype
     OP_NOP10 = 0xb9,
 
 
+    OP_CHECKDATASIG = 0xba,
+    OP_CHECKTRANSFERNONCE = 0xbb,
+    OP_CHECKEXPIRY = 0xbc,
+
     // template matching params
     OP_SMALLDATA = 0xf9,
+    OP_NONCE = 0xf8,
+    OP_NUMERIC = 0xf0,
     OP_SMALLINTEGER = 0xfa,
     OP_PUBKEYS = 0xfb,
     OP_PUBKEYHASH = 0xfd,
@@ -394,6 +401,26 @@ public:
             throw std::runtime_error("CScript::operator<<() : invalid opcode");
         insert(end(), (unsigned char)opcode);
         return *this;
+    }
+
+    CScript& operator<<(const uint160& b)
+    {
+        insert(end(), sizeof(b));
+        insert(end(), (unsigned char*)&b, (unsigned char*)&b + sizeof(b));
+        return *this;
+    }
+
+    CScript& operator<<(const uint256& b)
+    {
+        insert(end(), sizeof(b));
+        insert(end(), (unsigned char*)&b, (unsigned char*)&b + sizeof(b));
+        return *this;
+    }
+
+    CScript& operator<<(const CPubKey& key)
+    {
+        std::vector<unsigned char> vchKey = std::vector<unsigned char>(key.begin(), key.end());
+        return (*this) << vchKey;
     }
 
     CScript& operator<<(const CScriptNum& b)

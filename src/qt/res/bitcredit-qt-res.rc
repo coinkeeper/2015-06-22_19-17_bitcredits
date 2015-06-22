@@ -18,8 +18,8 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Bitcredit"
-            VALUE "FileDescription",    "Bitcredit Core (OSS GUI client for Bitcredit)"
+            VALUE "CompanyName",        "Section 32"
+            VALUE "FileDescription",    "Bitcredit Core (Base GUI client for Bitcredit)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "bitcredit-qt"
             VALUE "LegalCopyright",     COPYRIGHT_STR

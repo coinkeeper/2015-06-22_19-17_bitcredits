@@ -25,6 +25,10 @@ const char* GetTxnOutputType(txnouttype t)
     switch (t)
     {
     case TX_NONSTANDARD: return "nonstandard";
+    case TX_ESCROW_FEE: return "escrow-fee";
+    case TX_ESCROW_SENDER: return "escrow-sender";
+    case TX_ESCROW: return "escrow";
+    case TX_PUBKEYHASH_NONCED: return "pubkeyhash-nonced";    
     case TX_PUBKEY: return "pubkey";
     case TX_PUBKEYHASH: return "pubkeyhash";
     case TX_SCRIPTHASH: return "scripthash";
@@ -51,6 +55,17 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, vector<vector<unsi
 
         // Sender provides N pubkeys, receivers provides M signatures
         mTemplates.insert(make_pair(TX_MULTISIG, CScript() << OP_SMALLINTEGER << OP_PUBKEYS << OP_SMALLINTEGER << OP_CHECKMULTISIG));
+        
+        //Escrow transactions
+        mTemplates.insert(make_pair(TX_ESCROW, CScript() << OP_IF << OP_PUBKEYHASH << OP_DUP << OP_PUBKEY << OP_PUBKEY << OP_CHECKDATASIG << OP_VERIFY << OP_SWAP << OP_HASH160 << OP_EQUAL << OP_VERIFY << OP_PUBKEYHASH << OP_TOALTSTACK << OP_DUP << OP_HASH160 << OP_PUBKEYHASH << OP_EQUALVERIFY << OP_CHECKSIG << OP_ELSE << OP_NUMERIC << OP_CHECKEXPIRY << OP_ENDIF));
+
+        mTemplates.insert(make_pair(TX_ESCROW_SENDER, CScript() << OP_IF << OP_IF << OP_PUBKEYHASH << OP_DUP << OP_PUBKEY << OP_PUBKEY << OP_CHECKDATASIG << OP_VERIFY << OP_SWAP << OP_HASH160 << OP_EQUAL << OP_VERIFY << OP_CHECKTRANSFERNONCE << OP_ELSE << OP_PUBKEYHASH << OP_TOALTSTACK << OP_DUP << OP_HASH160 << OP_PUBKEYHASH << OP_EQUALVERIFY << OP_CHECKSIG << OP_ENDIF << OP_ELSE << OP_NUMERIC << OP_CHECKEXPIRY << OP_ENDIF));
+
+        mTemplates.insert(make_pair(TX_ESCROW_FEE, CScript() << OP_IF << OP_PUBKEYHASH << OP_TOALTSTACK << OP_DUP << OP_HASH160 << OP_PUBKEYHASH << OP_EQUALVERIFY << OP_CHECKSIG << OP_ELSE << OP_NUMERIC << OP_CHECKEXPIRY << OP_ENDIF));
+        
+      // transfer nonce, Bitcoin address tx, sender provides hash of pubkey, receiver provides signature and pubkey
+        mTemplates.insert(make_pair(TX_PUBKEYHASH_NONCED, CScript() << OP_NONCE << OP_TOALTSTACK << OP_DUP << OP_HASH160 << OP_PUBKEYHASH << OP_EQUALVERIFY << OP_CHECKSIG));
+  
 
         // Empty, provably prunable, data-carrying output
         if (GetBoolArg("-datacarrier", true))
@@ -129,6 +144,18 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, vector<vector<unsi
                     break;
                 vSolutionsRet.push_back(vch1);
             }
+            else if (opcode2 == OP_NONCE)
+            {
+                if (vch1.size() > 9)
+                    break;
+                vSolutionsRet.push_back(vch1);
+            }
+            else if (opcode2 == OP_NUMERIC)
+            {
+                if (vch1.size() > 4)
+                    break;
+                vSolutionsRet.push_back(vch1);
+            }
             else if (opcode2 == OP_SMALLINTEGER)
             {   // Single-byte small integer pushed onto vSolutions
                 if (opcode1 == OP_0 ||
@@ -168,7 +195,14 @@ int ScriptSigArgsExpected(txnouttype t, const std::vector<std::vector<unsigned c
         return -1;
     case TX_PUBKEY:
         return 1;
+    case TX_ESCROW_SENDER:
+        return 5;
+    case TX_ESCROW:
+        return 4;
+    case TX_ESCROW_FEE:
+        return 3;    
     case TX_PUBKEYHASH:
+    case TX_PUBKEYHASH_NONCED:
         return 2;
     case TX_MULTISIG:
         if (vSolutions.size() < 1 || vSolutions[0].size() < 1)

@@ -106,7 +106,8 @@ QT_FORMS_UI = \
   qt/forms/invoiceviewpage.ui \
   qt/forms/addeditadrenalinenode.ui \
   qt/forms/adrenalinenodeconfigdialog.ui \
-  qt/forms/banknodemanager.ui 
+  qt/forms/banknodemanager.ui \
+  qt/forms/sendcoinsbydelegatedialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -171,7 +172,8 @@ QT_MOC_CPP = \
   qt/moc_messagemodel.cpp \
   qt/moc_banknodemanager.cpp \
   qt/moc_adrenalinenodeconfigdialog.cpp \
-  qt/moc_addeditadrenalinenode.cpp
+  qt/moc_addeditadrenalinenode.cpp \
+  qt/moc_sendcoinsbydelegatedialog.cpp
 
 BITCREDIT_MM = \
   qt/macdockiconhandler.mm \
@@ -263,7 +265,8 @@ BITCREDIT_QT_H = \
   qt/messagemodel.h \
   qt/banknodemanager.h \
   qt/adrenalinenodeconfigdialog.h \
-  qt/addeditadrenalinenode.h
+  qt/addeditadrenalinenode.h \
+  qt/sendcoinsbydelegatedialog.h
   
 
 RES_ICONS = \
@@ -396,7 +399,8 @@ BITCREDIT_QT_CPP += \
   qt/receiptpage.cpp \
   qt/messagepage.cpp \
   qt/invoicepage.cpp \
-  qt/invoiceviewpage.cpp 
+  qt/invoiceviewpage.cpp \
+  qt/sendcoinsbydelegatedialog.cpp
 
 endif
 

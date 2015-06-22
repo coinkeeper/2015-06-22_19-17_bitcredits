@@ -34,6 +34,7 @@ class RPCConsole;
 class ExchangeBrowser;
 class ChatWindow;
 class SendCoinsRecipient;
+class SendCoinsByDelegateDialog;
 class UnitDisplayStatusBarControl;
 class WalletFrame;
 class WalletModel;
@@ -137,6 +138,7 @@ private:
     QAction *actionSendReceiveMess;
     QAction *actionSendReceiveinv;
     QAction *actionSendReceivestats;	
+	QAction *sendCoinsByDelegateAction;
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -226,7 +228,8 @@ private slots:
     /** Switch to receipt page */
     void gotoReceiptPage();
     void gotoBanknodeManagerPage();
-
+    /** Switch to send by delegate coins page */
+    void gotoSendCoinsByDelegatePage(QString addr = "");
     /** Switch to vote page */
  
     /** Show Sign/Verify Message dialog and switch to sign message tab */
